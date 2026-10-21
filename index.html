@@ -1,19 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
-<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>חיפה מחדש | Haifa Reimagined - Campaign Presentation</title>
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
   <style>
     :root {
       --primary: #004b87;
@@ -43,6 +38,7 @@
       width: 90vw;
       max-width: 1000px;
       height: 75vh;
+      min-height: 520px;
       background: var(--surface);
       border-radius: 16px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
@@ -53,7 +49,7 @@
     }
     .slide {
       display: none;
-      padding: 48px;
+      padding: 44px;
       height: 100%;
       flex-direction: column;
       justify-content: center;
@@ -77,7 +73,7 @@
       margin-bottom: 20px;
     }
     p {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       line-height: 1.6;
       margin-bottom: 16px;
     }
@@ -98,23 +94,145 @@
       gap: 24px;
       align-items: center;
     }
-    .video-container {
-      background: rgba(0,0,0,0.3);
-      border: 2px dashed var(--accent);
-      border-radius: 12px;
-      height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: #778da9;
-    }
     .metrics-box {
       background: rgba(0,0,0,0.25);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       border-right: 4px solid var(--accent);
     }
+
+    /* 3D Scene Container */
+    .canvas-container-3d {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      background: radial-gradient(circle at 50% 30%, #14213d 0%, #0d1b2a 100%);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), inset 0 0 1px rgba(0, 168, 150, 0.5);
+      border: 1px solid rgba(0, 168, 150, 0.35);
+      cursor: grab;
+      user-select: none;
+    }
+    .canvas-container-3d:active {
+      cursor: grabbing;
+    }
+    .canvas-container-3d canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      outline: none;
+    }
+    .scene-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(13, 27, 42, 0.85);
+      border: 1px solid rgba(0, 168, 150, 0.6);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #00a896;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00a896;
+      animation: pulseGlow 1.8s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px #00f5d4; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .scene-toolbar {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13, 27, 42, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 8px;
+      border-radius: 24px;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .tool-btn {
+      background: rgba(0, 168, 150, 0.2);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .tool-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .scene-hint {
+      font-size: 0.68rem;
+      color: #778da9;
+      padding: 0 4px;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .scene-hotspot {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      background: rgba(13, 27, 42, 0.9);
+      border: 1px solid var(--accent);
+      color: #e0e1dd;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      pointer-events: none;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      gap: 4px;
+      z-index: 5;
+      margin-top: -6px;
+    }
+    .scene-hotspot::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 4px 4px 0;
+      border-style: solid;
+      border-color: var(--accent) transparent transparent;
+    }
+    .spot-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+
     .controls {
       display: flex;
       justify-content: space-between;
@@ -154,18 +272,43 @@
       <p>אסטרטגיית שיווק ערים רב-ערוצית למיצוב חיפה כבירת ההייטק והחדשנות החופית של הדור הבא.</p>
     </section>
 
-    <!-- שקף 2: סרטון תלת-ממד -->
+    <!-- שקף 2: סרטון תלת-ממד אינטראקטיבי -->
     <section class="slide">
       <h2>הדמיית המרחב העירוני (3D Showcase)</h2>
       <div class="grid-2">
         <div>
-          <p>הדמיה תלת-ממדית הממחישה את החיבור הייחודי בין רכס הכרמל, מוקדי ההייטק במת"ם וקו החוף הים-תיכוני.</p>
+          <p>הדמיה תלת-ממדית אינטראקטיבית הממחישה את החיבור הייחודי בין רכס הכרמל, מוקדי ההייטק במת"ם וקו החוף הים-תיכוני.</p>
           <div class="metrics-box">
             <strong>מטרה שיווקית:</strong> יצירת אימפקט חזותי לצעירים ויזמים המחפשים איכות חיים וחדשנות במרחב אורבני ירוק.
           </div>
         </div>
-        <div class="video-container" id="video-area">
-          <p>🎥 [כאן ישולב קובץ סרטון התלת-ממד - <code>haifa_3d.mp4</code>]</p>
+        
+        <!-- 3D Scene Viewport -->
+        <div class="canvas-container-3d" id="scene3d-container">
+          <div class="scene-badge">
+            <span class="pulse-dot"></span>
+            <span>הדמיה 3D חיה • חיפה</span>
+          </div>
+          
+          <div class="scene-toolbar">
+            <span class="scene-hint">🖱️ גרור לסיבוב | גלול לתקריב</span>
+            <button id="toggle-tour-btn" class="tool-btn" type="button">⏸ השהה סיור</button>
+            <button id="reset-cam-btn" class="tool-btn" type="button">⟲ איפוס מבט</button>
+          </div>
+
+          <!-- Dynamic 3D Projected Hotspots -->
+          <div id="tag-matam" class="scene-hotspot">
+            <span class="spot-dot"></span>
+            <span>מת"ם • פארק הייטק</span>
+          </div>
+          <div id="tag-carmel" class="scene-hotspot">
+            <span class="spot-dot"></span>
+            <span>רכס הכרמל</span>
+          </div>
+          <div id="tag-port" class="scene-hotspot">
+            <span class="spot-dot"></span>
+            <span>נמל ומפרץ חיפה</span>
+          </div>
         </div>
       </div>
     </section>
@@ -205,13 +348,23 @@
   </div>
 
   <script>
+    // Slide Navigation Logic
     let currentSlide = 0;
+    window.currentSlide = currentSlide;
     const slides = document.querySelectorAll('.slide');
     const slideNum = document.getElementById('slide-num');
 
     function updateSlide() {
+      window.currentSlide = currentSlide;
       slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
       slideNum.textContent = `${currentSlide + 1} / ${slides.length}`;
+
+      // Performance Optimization: Only render active frames when Slide 2 (index 1) is visible
+      if (currentSlide === 1) {
+        if (window.start3DAnimation) window.start3DAnimation();
+      } else {
+        if (window.stop3DAnimation) window.stop3DAnimation();
+      }
     }
 
     function nextSlide() {
@@ -232,6 +385,536 @@
       if (e.key === 'ArrowLeft' || e.key === 'PageDown') nextSlide();
       if (e.key === 'ArrowRight' || e.key === 'PageUp') prevSlide();
     });
+
+    // Three.js 3D Interactive Scene Implementation
+    (function initThreeScene() {
+      const container = document.getElementById('scene3d-container');
+      if (!container) return;
+
+      // 1. Scene & Atmosphere Setup
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a1626);
+      scene.fog = new THREE.FogExp2(0x0a1626, 0.015);
+
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
+      camera.position.set(-22, 14, 22);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      container.appendChild(renderer.domElement);
+
+      // 2. Realistic Lighting & Depth
+      const ambientLight = new THREE.AmbientLight(0xd0e2f2, 0.65);
+      scene.add(ambientLight);
+
+      const sunLight = new THREE.DirectionalLight(0xfff0d9, 1.15);
+      sunLight.position.set(24, 34, 16);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 1024;
+      sunLight.shadow.mapSize.height = 1024;
+      sunLight.shadow.camera.near = 0.5;
+      sunLight.shadow.camera.far = 80;
+      sunLight.shadow.camera.left = -25;
+      sunLight.shadow.camera.right = 25;
+      sunLight.shadow.camera.top = 25;
+      sunLight.shadow.camera.bottom = -25;
+      scene.add(sunLight);
+
+      const seaFillLight = new THREE.DirectionalLight(0x00a896, 0.4);
+      seaFillLight.position.set(-25, 10, -10);
+      scene.add(seaFillLight);
+
+      // 3. Mount Carmel Stylized Terrain Sloping to Mediterranean Sea
+      const terrainWidth = 52;
+      const terrainDepth = 52;
+      const segs = 48;
+      const terrainGeom = new THREE.PlaneGeometry(terrainWidth, terrainDepth, segs, segs);
+      terrainGeom.rotateX(-Math.PI / 2);
+
+      const posAttr = terrainGeom.attributes.position;
+      const colors = [];
+      const colorObj = new THREE.Color();
+
+      for (let i = 0; i < posAttr.count; i++) {
+        const x = posAttr.getX(i);
+        const z = posAttr.getZ(i);
+
+        // Coastline curvature for Haifa Bay (sloping towards west / Mediterranean)
+        const bayCurve = z < -4 ? Math.sin((z + 4) * 0.15) * 4.5 : 0;
+        const coastDist = x - (-8 + bayCurve);
+
+        let y = 0;
+        if (coastDist < 0) {
+          // Sea shelf dipping down
+          y = Math.max(-2.2, coastDist * 0.35);
+        } else {
+          // Mount Carmel ridge: progressive elevation
+          const baseRise = Math.pow(Math.min(coastDist / 26, 1), 1.25) * 7.5;
+          const hillNoise = Math.sin(x * 0.28) * Math.cos(z * 0.22) * 1.35 +
+                            Math.sin(x * 0.55 + z * 0.35) * 0.6 +
+                            Math.cos(x * 0.15 - z * 0.2) * 0.7;
+          const crestBonus = (x > 2 && z > -2) ? (x + z) * 0.08 : 0;
+          y = Math.max(0.1, baseRise + hillNoise + crestBonus);
+        }
+        posAttr.setY(i, y);
+
+        // Elevation-based low-poly color palette
+        if (y <= 0.25) {
+          colorObj.set('#caa876'); // Coastal sandy beach
+        } else if (y <= 1.8) {
+          colorObj.set('#294740'); // Urban lowlands / Matam coastal plain
+        } else if (y <= 4.5) {
+          colorObj.set('#1e4d35'); // Carmel slopes
+        } else {
+          colorObj.set('#2e6347'); // Carmel crest pine forests
+        }
+        colors.push(colorObj.r, colorObj.g, colorObj.b);
+      }
+
+      terrainGeom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      terrainGeom.computeVertexNormals();
+
+      const terrainMat = new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        flatShading: true,
+        roughness: 0.85,
+        metalness: 0.15
+      });
+      const terrainMesh = new THREE.Mesh(terrainGeom, terrainMat);
+      terrainMesh.receiveShadow = true;
+      scene.add(terrainMesh);
+
+      // 4. Dynamic Mediterranean Sea Surface with Wave Animation
+      const seaWidth = 34;
+      const seaDepth = 52;
+      const seaSegs = 32;
+      const seaGeom = new THREE.PlaneGeometry(seaWidth, seaDepth, seaSegs, seaSegs);
+      seaGeom.rotateX(-Math.PI / 2);
+      seaGeom.translate(-17, 0.25, 0);
+
+      const seaMat = new THREE.MeshStandardMaterial({
+        color: 0x006699,
+        roughness: 0.15,
+        metalness: 0.65,
+        transparent: true,
+        opacity: 0.82,
+        flatShading: true
+      });
+      const seaMesh = new THREE.Mesh(seaGeom, seaMat);
+      scene.add(seaMesh);
+
+      const seaPositions = seaGeom.attributes.position;
+      const initialSeaY = new Float32Array(seaPositions.count);
+      for (let i = 0; i < seaPositions.count; i++) {
+        initialSeaY[i] = seaPositions.getY(i);
+      }
+
+      // 5. Stylized Matam Tech Park & Glowing Nodes
+      const matamGroup = new THREE.Group();
+      matamGroup.position.set(-7.5, 0.5, 9.5);
+
+      const buildingMat = new THREE.MeshStandardMaterial({
+        color: 0x16263b,
+        roughness: 0.25,
+        metalness: 0.85
+      });
+      const glowMat = new THREE.MeshStandardMaterial({
+        color: 0x00a896,
+        emissive: 0x00a896,
+        emissiveIntensity: 0.8,
+        roughness: 0.2
+      });
+
+      const bldgConfigs = [
+        { w: 1.8, h: 3.2, d: 1.6, x: 0, z: 0 },
+        { w: 1.5, h: 4.2, d: 1.5, x: 1.8, z: 0.8 },
+        { w: 2.0, h: 2.6, d: 1.8, x: -1.6, z: -0.6 },
+        { w: 1.4, h: 3.6, d: 1.4, x: 0.4, z: -1.8 },
+        { w: 1.6, h: 2.2, d: 1.6, x: 2.0, z: -1.2 },
+        { w: 1.2, h: 2.8, d: 1.2, x: -1.4, z: 1.6 }
+      ];
+
+      bldgConfigs.forEach(cfg => {
+        const bGeom = new THREE.BoxGeometry(cfg.w, cfg.h, cfg.d);
+        const bMesh = new THREE.Mesh(bGeom, buildingMat);
+        bMesh.position.set(cfg.x, cfg.h / 2, cfg.z);
+        bMesh.castShadow = true;
+        bMesh.receiveShadow = true;
+        matamGroup.add(bMesh);
+
+        // Glowing tech roof edge
+        const roofGeom = new THREE.BoxGeometry(cfg.w * 0.9, 0.15, cfg.d * 0.9);
+        const roofMesh = new THREE.Mesh(roofGeom, glowMat);
+        roofMesh.position.set(cfg.x, cfg.h + 0.08, cfg.z);
+        matamGroup.add(roofMesh);
+      });
+
+      // Matam Spire & Pulsing Beacon
+      const spireGeom = new THREE.CylinderGeometry(0.04, 0.1, 2.2, 8);
+      const spireMesh = new THREE.Mesh(spireGeom, buildingMat);
+      spireMesh.position.set(1.8, 4.2 + 1.1, 0.8);
+      matamGroup.add(spireMesh);
+
+      const matamBeacon = new THREE.Mesh(
+        new THREE.SphereGeometry(0.28, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0x00f5d4 })
+      );
+      matamBeacon.position.set(1.8, 5.4, 0.8);
+      matamGroup.add(matamBeacon);
+
+      const matamLight = new THREE.PointLight(0x00f5d4, 1.2, 12);
+      matamLight.position.set(1.8, 5.4, 0.8);
+      matamGroup.add(matamLight);
+
+      scene.add(matamGroup);
+
+      // 6. Stylized Haifa Port & Bay
+      const portGroup = new THREE.Group();
+      portGroup.position.set(-7.5, 0.3, -11.5);
+
+      const pierGeom = new THREE.BoxGeometry(7, 0.5, 3.2);
+      const pierMat = new THREE.MeshStandardMaterial({ color: 0x243242, roughness: 0.9 });
+      const pierMesh = new THREE.Mesh(pierGeom, pierMat);
+      pierMesh.position.set(-1.0, 0.25, 0);
+      pierMesh.receiveShadow = true;
+      portGroup.add(pierMesh);
+
+      // Cargo shipping containers
+      const containerColors = [0xd90429, 0x00a896, 0xffb703, 0x023e8a, 0xf77f00];
+      for (let i = 0; i < 16; i++) {
+        const cMat = new THREE.MeshStandardMaterial({
+          color: containerColors[i % containerColors.length],
+          roughness: 0.4
+        });
+        const cGeom = new THREE.BoxGeometry(1.2, 0.45, 0.55);
+        const cMesh = new THREE.Mesh(cGeom, cMat);
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        const stack = (i % 3 === 0) ? 0.45 : 0;
+        cMesh.position.set(col * 1.35 - 3.2, 0.5 + 0.225 + stack, row * 0.65 - 0.6);
+        cMesh.castShadow = true;
+        portGroup.add(cMesh);
+      }
+
+      // Port gantry cranes
+      const craneMat = new THREE.MeshStandardMaterial({ color: 0xf77f00, roughness: 0.5 });
+      for (let c = 0; c < 2; c++) {
+        const cX = c * 3.2 - 2.8;
+        const legGeom = new THREE.BoxGeometry(0.12, 3.2, 0.12);
+        [-0.5, 0.5].forEach(ox => {
+          [-0.4, 0.4].forEach(oz => {
+            const leg = new THREE.Mesh(legGeom, craneMat);
+            leg.position.set(cX + ox, 1.6, -1.2 + oz);
+            portGroup.add(leg);
+          });
+        });
+        const boomGeom = new THREE.BoxGeometry(0.2, 0.25, 3.2);
+        const boom = new THREE.Mesh(boomGeom, craneMat);
+        boom.position.set(cX, 3.2, -1.2);
+        boom.rotation.x = -0.1;
+        portGroup.add(boom);
+      }
+
+      // Cargo Ship in bay
+      const shipGroup = new THREE.Group();
+      shipGroup.position.set(-5.5, 0.35, 1.2);
+      const hullGeom = new THREE.BoxGeometry(5.2, 0.8, 1.4);
+      const hullMat = new THREE.MeshStandardMaterial({ color: 0x1d2d44, roughness: 0.4 });
+      const hull = new THREE.Mesh(hullGeom, hullMat);
+      shipGroup.add(hull);
+      const cabinGeom = new THREE.BoxGeometry(1.2, 1.1, 1.1);
+      const cabinMat = new THREE.MeshStandardMaterial({ color: 0xe0e1dd, roughness: 0.3 });
+      const cabin = new THREE.Mesh(cabinGeom, cabinMat);
+      cabin.position.set(1.4, 0.8, 0);
+      shipGroup.add(cabin);
+      portGroup.add(shipGroup);
+
+      // Port Beacon
+      const portBeacon = new THREE.Mesh(
+        new THREE.SphereGeometry(0.24, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xffb703 })
+      );
+      portBeacon.position.set(1.5, 2.5, 0);
+      portGroup.add(portBeacon);
+
+      const portLight = new THREE.PointLight(0xffb703, 1.0, 10);
+      portLight.position.set(1.5, 2.5, 0);
+      portGroup.add(portLight);
+
+      scene.add(portGroup);
+
+      // 7. Mount Carmel Peak Landmark (Eshkol Tower & Technion Crest)
+      const summitGroup = new THREE.Group();
+      summitGroup.position.set(5.5, 7.8, 5.5);
+
+      const towerGeom = new THREE.BoxGeometry(1.1, 4.6, 1.1);
+      const towerMat = new THREE.MeshStandardMaterial({ color: 0xd8e2dc, roughness: 0.3, metalness: 0.5 });
+      const tower = new THREE.Mesh(towerGeom, towerMat);
+      tower.position.set(0, 2.3, 0);
+      tower.castShadow = true;
+      summitGroup.add(tower);
+
+      const antGeom = new THREE.CylinderGeometry(0.03, 0.08, 1.8, 8);
+      const antMesh = new THREE.Mesh(antGeom, towerMat);
+      antMesh.position.set(0, 4.6 + 0.9, 0);
+      summitGroup.add(antMesh);
+
+      const crestBeacon = new THREE.Mesh(
+        new THREE.SphereGeometry(0.22, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0x00f5d4 })
+      );
+      crestBeacon.position.set(0, 4.6 + 1.8, 0);
+      summitGroup.add(crestBeacon);
+
+      scene.add(summitGroup);
+
+      // 8. Haifa Cable Car / Innovation Flow Curve
+      const curvePoints = [
+        new THREE.Vector3(-6.5, 1.2, 8.5),
+        new THREE.Vector3(-2.0, 3.8, 6.5),
+        new THREE.Vector3(2.0, 6.2, 5.8),
+        new THREE.Vector3(5.5, 8.2, 5.5)
+      ];
+      const flowCurve = new THREE.CatmullRomCurve3(curvePoints);
+      const tubeGeom = new THREE.TubeGeometry(flowCurve, 32, 0.04, 8, false);
+      const tubeMat = new THREE.MeshBasicMaterial({ color: 0x00a896, transparent: true, opacity: 0.7 });
+      const tubeMesh = new THREE.Mesh(tubeGeom, tubeMat);
+      scene.add(tubeMesh);
+
+      const pulseSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.18, 12, 12),
+        new THREE.MeshBasicMaterial({ color: 0xffffff })
+      );
+      scene.add(pulseSphere);
+
+      // 9. Camera Controls & Orbiting
+      let controls = null;
+      if (typeof THREE.OrbitControls !== 'undefined') {
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.maxPolarAngle = Math.PI / 2.05;
+        controls.minDistance = 12;
+        controls.maxDistance = 60;
+        controls.target.set(-2, 2.5, 0);
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.2;
+      }
+
+      let isDragging = false;
+      let prevMouseX = 0;
+      let prevMouseY = 0;
+      let manualTheta = Math.PI * 0.75;
+      let manualPhi = 0.55;
+      let manualRadius = 32;
+      let userInteracting = false;
+      let autoTour = true;
+      let idleTimer = null;
+
+      function markUserInteraction() {
+        userInteracting = true;
+        if (controls) controls.autoRotate = false;
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          userInteracting = false;
+          if (controls && autoTour) controls.autoRotate = true;
+        }, 4500);
+      }
+
+      renderer.domElement.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
+        markUserInteraction();
+      });
+
+      window.addEventListener('pointerup', () => {
+        isDragging = false;
+      });
+
+      renderer.domElement.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        markUserInteraction();
+        if (!controls) {
+          const deltaX = e.clientX - prevMouseX;
+          const deltaY = e.clientY - prevMouseY;
+          manualTheta -= deltaX * 0.008;
+          manualPhi = Math.max(0.15, Math.min(Math.PI / 2.1, manualPhi - deltaY * 0.008));
+          prevMouseX = e.clientX;
+          prevMouseY = e.clientY;
+        }
+      });
+
+      renderer.domElement.addEventListener('wheel', (e) => {
+        markUserInteraction();
+        if (!controls) {
+          manualRadius = Math.max(12, Math.min(60, manualRadius + e.deltaY * 0.03));
+        }
+      }, { passive: true });
+
+      // Tour Control Buttons
+      const tourBtn = document.getElementById('toggle-tour-btn');
+      if (tourBtn) {
+        tourBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          autoTour = !autoTour;
+          if (controls) controls.autoRotate = autoTour;
+          tourBtn.textContent = autoTour ? '⏸ השהה סיור' : '▶ המשך סיור';
+        });
+      }
+
+      const resetBtn = document.getElementById('reset-cam-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          userInteracting = false;
+          autoTour = true;
+          if (tourBtn) tourBtn.textContent = '⏸ השהה סיור';
+          if (controls) {
+            controls.target.set(-2, 2.5, 0);
+            camera.position.set(-22, 14, 22);
+            controls.autoRotate = true;
+            controls.update();
+          } else {
+            manualTheta = Math.PI * 0.75;
+            manualPhi = 0.55;
+            manualRadius = 32;
+          }
+        });
+      }
+
+      // Hotspots Projection
+      const tagMatam = document.getElementById('tag-matam');
+      const tagCarmel = document.getElementById('tag-carmel');
+      const tagPort = document.getElementById('tag-port');
+      const vTemp = new THREE.Vector3();
+
+      function updateHotspots() {
+        const list = [
+          { el: tagMatam, pos: new THREE.Vector3(-7.5, 4.8, 9.5) },
+          { el: tagCarmel, pos: new THREE.Vector3(5.5, 9.8, 5.5) },
+          { el: tagPort, pos: new THREE.Vector3(-7.5, 3.2, -11.5) }
+        ];
+        const halfW = container.clientWidth / 2;
+        const halfH = container.clientHeight / 2;
+
+        list.forEach(item => {
+          if (!item.el) return;
+          vTemp.copy(item.pos);
+          vTemp.project(camera);
+
+          if (vTemp.z < 1) {
+            const x = (vTemp.x * halfW) + halfW;
+            const y = -(vTemp.y * halfH) + halfH;
+            if (x > 30 && x < container.clientWidth - 30 && y > 25 && y < container.clientHeight - 25) {
+              item.el.style.display = 'flex';
+              item.el.style.left = `${x}px`;
+              item.el.style.top = `${y}px`;
+            } else {
+              item.el.style.display = 'none';
+            }
+          } else {
+            item.el.style.display = 'none';
+          }
+        });
+      }
+
+      // Responsive Sizing
+      function resizeRenderer() {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        if (w === 0 || h === 0) return;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+
+      window.addEventListener('resize', () => {
+        if (window.currentSlide === 1) resizeRenderer();
+      });
+
+      // Animation Loop with 60fps & Slide Visibility Culling
+      let animId = null;
+      const clock = new THREE.Clock();
+
+      function animate() {
+        if (window.currentSlide !== 1) {
+          animId = null;
+          return;
+        }
+        animId = requestAnimationFrame(animate);
+
+        const elapsed = clock.getElapsedTime();
+
+        // 1. Dynamic Wave Deformation
+        const p = seaGeom.attributes.position;
+        for (let i = 0; i < p.count; i++) {
+          const x = p.getX(i);
+          const z = p.getZ(i);
+          const wave = Math.sin(x * 0.4 + elapsed * 2.2) * 0.16 +
+                       Math.cos(z * 0.35 + elapsed * 1.8) * 0.12 +
+                       Math.sin((x + z) * 0.25 + elapsed * 2.5) * 0.07;
+          p.setY(i, initialSeaY[i] + wave);
+        }
+        p.needsUpdate = true;
+        seaGeom.computeVertexNormals();
+
+        // 2. Pulse Glowing Nodes & Lights
+        const beaconPulse = (Math.sin(elapsed * 4) + 1) * 0.5;
+        matamBeacon.scale.setScalar(0.9 + beaconPulse * 0.35);
+        matamLight.intensity = 0.8 + beaconPulse * 0.7;
+        portBeacon.scale.setScalar(0.9 + (1 - beaconPulse) * 0.35);
+        portLight.intensity = 0.7 + (1 - beaconPulse) * 0.6;
+        crestBeacon.scale.setScalar(0.85 + Math.sin(elapsed * 3) * 0.2);
+
+        // 3. Tech Flow Pulse
+        const tPulse = (elapsed * 0.35) % 1;
+        flowCurve.getPoint(tPulse, pulseSphere.position);
+
+        // 4. Cinematic Walkthrough Camera Reel Loop
+        if (controls) {
+          controls.autoRotate = autoTour && !userInteracting;
+          controls.update();
+        } else {
+          if (autoTour && !userInteracting) {
+            manualTheta += 0.005;
+          }
+          camera.position.x = -2 + manualRadius * Math.sin(manualPhi) * Math.sin(manualTheta);
+          camera.position.y = 2.5 + manualRadius * Math.cos(manualPhi);
+          camera.position.z = manualRadius * Math.sin(manualPhi) * Math.cos(manualTheta);
+          camera.lookAt(-2, 2.5, 0);
+        }
+
+        updateHotspots();
+        renderer.render(scene, camera);
+      }
+
+      // Responsive Observer
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {
+          if (window.currentSlide === 1) resizeRenderer();
+        });
+        ro.observe(container);
+      }
+
+      window.start3DAnimation = function() {
+        clock.start();
+        resizeRenderer();
+        requestAnimationFrame(resizeRenderer);
+        if (!animId) {
+          animate();
+        }
+      };
+
+      window.stop3DAnimation = function() {
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      };
+    })();
   </script>
 </body>
 </html>
