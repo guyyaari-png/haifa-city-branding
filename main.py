@@ -42,7 +42,7 @@ def run_city_marketing_engine():
     print(f"Projected Qualified Inquiries (Leads): {total_estimated_leads:,}")
     print("-" * 60)
 
-    # 1. הפקת תרשים נתונים ויזואלי (Matplotlib Chart)
+    # הפקת תרשים נתונים ויזואלי (Matplotlib Chart)
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
     fig.patch.set_facecolor('#0d1b2a')
 
@@ -77,7 +77,7 @@ def run_city_marketing_engine():
     plt.close()
     print(f"Visual KPI Chart generated: {chart_filename}")
 
-    # 2. שמירת הנתונים ל-JSON
+    # שמירת נתונים ל-JSON
     output_data = {
         "campaign_name": "Haifa Reimagined",
         "total_budget_ils": total_budget_ils,
@@ -98,7 +98,7 @@ def run_city_marketing_engine():
     print("KPIs exported to campaign_metrics.json")
     print("=" * 60)
 
-    # 3. הפעלת המצגת בדפדפן
+    # פתיחת המצגת בדפדפן
     html_file = Path(__file__).resolve().parent / "index.html"
     if html_file.exists():
         print("Launching Haifa Presentation...")

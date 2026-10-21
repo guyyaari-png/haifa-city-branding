@@ -36,9 +36,9 @@
     }
     .deck-container {
       width: 90vw;
-      max-width: 1000px;
-      height: 75vh;
-      min-height: 520px;
+      max-width: 1040px;
+      height: 78vh;
+      min-height: 540px;
       background: var(--surface);
       border-radius: 16px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
@@ -46,10 +46,11 @@
       display: flex;
       flex-direction: column;
       border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
     }
     .slide {
       display: none;
-      padding: 44px;
+      padding: 40px 48px;
       height: 100%;
       flex-direction: column;
       justify-content: center;
@@ -63,14 +64,14 @@
       to { opacity: 1; transform: translateY(0); }
     }
     h1 {
-      font-size: 2.8rem;
+      font-size: 2.7rem;
       color: var(--white);
       margin-bottom: 16px;
     }
     h2 {
-      font-size: 2rem;
+      font-size: 1.95rem;
       color: var(--accent);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     p {
       font-size: 1.15rem;
@@ -91,7 +92,7 @@
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 28px;
       align-items: center;
     }
     .metrics-box {
@@ -100,8 +101,16 @@
       padding: 18px;
       border-right: 4px solid var(--accent);
     }
+    .code-badge {
+      background: #0d1b2a;
+      color: var(--accent);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.95rem;
+    }
 
-    /* 3D Scene Container */
+    /* 3D Scene Viewport */
     .canvas-container-3d {
       position: relative;
       width: 100%;
@@ -238,9 +247,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 16px 32px;
-      background: rgba(13, 27, 42, 0.6);
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
+      background: rgba(13, 27, 42, 0.7);
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
     .btn {
       background: var(--accent);
@@ -270,9 +278,12 @@
       <span class="badge">קמפיין מיתוג דיגיטלי</span>
       <h1>חיפה מחדש: יזמות, טבע וחיים משותפים</h1>
       <p>אסטרטגיית שיווק ערים רב-ערוצית למיצוב חיפה כבירת ההייטק והחדשנות החופית של הדור הבא.</p>
+      <div class="metrics-box" style="margin-top: 16px;">
+        <strong>קהל יעד עיקרי:</strong> סטודנטים, צעירים ויזמים המחפשים איכות חיים, אקדמיה מובילה ותעסוקה טכנולוגית.
+      </div>
     </section>
 
-    <!-- שקף 2: סרטון תלת-ממד אינטראקטיבי -->
+    <!-- שקף 2: הדמיית 3D אינטראקטיבית -->
     <section class="slide">
       <h2>הדמיית המרחב העירוני (3D Showcase)</h2>
       <div class="grid-2">
@@ -313,28 +324,24 @@
       </div>
     </section>
 
-    <!-- שקף 3: מנוע נתונים ב-Python -->
+    <!-- שקף 3: מנוע הנתונים וקובץ הפייתון (דרישת הקורס) -->
     <section class="slide">
       <h2>ניתוח ביצועים ותקציב (Python Engine)</h2>
       <div class="grid-2">
         <div>
-          <p>מודל חיזוי ואופטימיזציית תקציב שיווקי שנבנה ב-Python, המנתח תקורות קמפיין, המרות תיירות וחשיפה דיגיטלית.</p>
+          <p>מודל חיזוי ואופטימיזציית תקציב שיווקי שנבנה ומנוהל בקובץ <span class="code-badge">main.py</span>.</p>
           <div class="metrics-box" id="python-output">
-            📊 <strong>נתוני הרצת מערכת:</strong>
+            📊 <strong>נתוני הרצת הסקריפט (KPIs):</strong>
             <ul style="margin-top: 8px; padding-right: 20px; line-height: 1.6;">
-              <li>תקציב כולל: 250,000 ₪</li>
-              <li>אומדן חשיפה דיגיטלית: 6,250,000 חשיפות</li>
-              <li>פניות עניין צפויות: 218,750</li>
+              <li>קובץ מנוע: <code>main.py</code> (ייצוא ל-<code>campaign_metrics.json</code>)</li>
+              <li>תקציב קמפיין: 250,000 ₪</li>
+              <li>אומדן חשיפה כולל: 6,385,000 חשיפות</li>
+              <li>פניות עניין צפויות (Leads): 222,350</li>
             </ul>
           </div>
         </div>
-        <div class="metrics-box" style="border-right-color: #e0e1dd;">
-          <h3 style="margin-bottom: 10px; color: var(--white);">KPIs מרכזיים:</h3>
-          <ul style="padding-right: 20px; line-height: 1.8;">
-            <li>יעד חשיפה ממוקד: צעירים ויזמים בגילאי 22-35</li>
-            <li>אופטימיזציית CAC (עלות המרה של ליד מעבר/תעסוקה)</li>
-            <li>חיבור למרכזי אקדמיה ותעסוקה טכנולוגית</li>
-          </ul>
+        <div style="text-align: center;">
+          <img src="campaign_analytics_chart.png" alt="תרשים נתוני פייתון" style="width: 100%; max-height: 270px; object-fit: contain; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 8px 16px rgba(0,0,0,0.3);">
         </div>
       </div>
     </section>
@@ -359,7 +366,7 @@
       slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
       slideNum.textContent = `${currentSlide + 1} / ${slides.length}`;
 
-      // Performance Optimization: Only render active frames when Slide 2 (index 1) is visible
+      // Performance Optimization: Only render active frames when Slide 2 is visible
       if (currentSlide === 1) {
         if (window.start3DAnimation) window.start3DAnimation();
       } else {
@@ -441,16 +448,13 @@
         const x = posAttr.getX(i);
         const z = posAttr.getZ(i);
 
-        // Coastline curvature for Haifa Bay (sloping towards west / Mediterranean)
         const bayCurve = z < -4 ? Math.sin((z + 4) * 0.15) * 4.5 : 0;
         const coastDist = x - (-8 + bayCurve);
 
         let y = 0;
         if (coastDist < 0) {
-          // Sea shelf dipping down
           y = Math.max(-2.2, coastDist * 0.35);
         } else {
-          // Mount Carmel ridge: progressive elevation
           const baseRise = Math.pow(Math.min(coastDist / 26, 1), 1.25) * 7.5;
           const hillNoise = Math.sin(x * 0.28) * Math.cos(z * 0.22) * 1.35 +
                             Math.sin(x * 0.55 + z * 0.35) * 0.6 +
@@ -460,15 +464,14 @@
         }
         posAttr.setY(i, y);
 
-        // Elevation-based low-poly color palette
         if (y <= 0.25) {
-          colorObj.set('#caa876'); // Coastal sandy beach
+          colorObj.set('#caa876');
         } else if (y <= 1.8) {
-          colorObj.set('#294740'); // Urban lowlands / Matam coastal plain
+          colorObj.set('#294740');
         } else if (y <= 4.5) {
-          colorObj.set('#1e4d35'); // Carmel slopes
+          colorObj.set('#1e4d35');
         } else {
-          colorObj.set('#2e6347'); // Carmel crest pine forests
+          colorObj.set('#2e6347');
         }
         colors.push(colorObj.r, colorObj.g, colorObj.b);
       }
@@ -544,14 +547,12 @@
         bMesh.receiveShadow = true;
         matamGroup.add(bMesh);
 
-        // Glowing tech roof edge
         const roofGeom = new THREE.BoxGeometry(cfg.w * 0.9, 0.15, cfg.d * 0.9);
         const roofMesh = new THREE.Mesh(roofGeom, glowMat);
         roofMesh.position.set(cfg.x, cfg.h + 0.08, cfg.z);
         matamGroup.add(roofMesh);
       });
 
-      // Matam Spire & Pulsing Beacon
       const spireGeom = new THREE.CylinderGeometry(0.04, 0.1, 2.2, 8);
       const spireMesh = new THREE.Mesh(spireGeom, buildingMat);
       spireMesh.position.set(1.8, 4.2 + 1.1, 0.8);
@@ -581,7 +582,6 @@
       pierMesh.receiveShadow = true;
       portGroup.add(pierMesh);
 
-      // Cargo shipping containers
       const containerColors = [0xd90429, 0x00a896, 0xffb703, 0x023e8a, 0xf77f00];
       for (let i = 0; i < 16; i++) {
         const cMat = new THREE.MeshStandardMaterial({
@@ -598,7 +598,6 @@
         portGroup.add(cMesh);
       }
 
-      // Port gantry cranes
       const craneMat = new THREE.MeshStandardMaterial({ color: 0xf77f00, roughness: 0.5 });
       for (let c = 0; c < 2; c++) {
         const cX = c * 3.2 - 2.8;
@@ -617,7 +616,6 @@
         portGroup.add(boom);
       }
 
-      // Cargo Ship in bay
       const shipGroup = new THREE.Group();
       shipGroup.position.set(-5.5, 0.35, 1.2);
       const hullGeom = new THREE.BoxGeometry(5.2, 0.8, 1.4);
@@ -631,7 +629,6 @@
       shipGroup.add(cabin);
       portGroup.add(shipGroup);
 
-      // Port Beacon
       const portBeacon = new THREE.Mesh(
         new THREE.SphereGeometry(0.24, 16, 16),
         new THREE.MeshBasicMaterial({ color: 0xffb703 })
@@ -645,7 +642,7 @@
 
       scene.add(portGroup);
 
-      // 7. Mount Carmel Peak Landmark (Eshkol Tower & Technion Crest)
+      // 7. Mount Carmel Peak Landmark
       const summitGroup = new THREE.Group();
       summitGroup.position.set(5.5, 7.8, 5.5);
 
@@ -670,7 +667,7 @@
 
       scene.add(summitGroup);
 
-      // 8. Haifa Cable Car / Innovation Flow Curve
+      // 8. Haifa Cable Car Flow Curve
       const curvePoints = [
         new THREE.Vector3(-6.5, 1.2, 8.5),
         new THREE.Vector3(-2.0, 3.8, 6.5),
